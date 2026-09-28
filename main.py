@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 app = FastAPI(
     title="PocketSmart AI",
-    description="Your Smart Budget & Recommendation Engine",
+    description="Modular Architecture & API Setup",
     version="1.0.0"
 )
 
@@ -15,24 +15,21 @@ class BudgetRequest(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"status": "Online", "project": "PocketSmart AI"}
+    return {"message": "Welcome to PocketSmart AI API Modular Setup!"}
 
-@app.get("/health")
-def health_check():
-    return {"status": "Healthy"}
+@app.get("/api/v1/status")
+def get_status():
+    return {"status": "Active", "module": "FastAPI Initialization"}
 
-@app.post("/api/v1/recommend-budget")
-def recommend_budget(data: BudgetRequest):
+@app.post("/api/v1/analyze-expense")
+def analyze_expense(data: BudgetRequest):
     total_expenses = sum(data.expenses.values())
     remaining_balance = data.monthly_income - total_expenses
     
-    if remaining_balance < 0:
-        recommendation = "Warning: Expenses exceed income!"
-    else:
-        recommendation = f"Surplus of ₹{remaining_balance}. Allocate to goal."
-        
     return {
         "user_id": data.user_id,
+        "total_income": data.monthly_income,
+        "total_expenses": total_expenses,
         "remaining_balance": remaining_balance,
-        "recommendation": recommendation
+        "status": "Success"
     }
